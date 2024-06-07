@@ -192,6 +192,8 @@ namespace UnityEngine.XR.Interaction.Toolkit.Samples.StarterAssets
         /// <seealso cref="objectSpawned"/>
         public bool TrySpawnObject(Vector3 spawnPoint, Vector3 spawnNormal)
         {
+            if (CustomSpaw)
+            GameManager
             if (m_OnlySpawnInView)
             {
                 var inViewMin = m_ViewportPeriphery;
