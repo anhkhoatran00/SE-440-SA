@@ -28,11 +28,13 @@ public class CarController : MonoBehaviour
     [SerializeField] private float speed = 50f;
     [SerializeField] private float steerSpeed = 30f;
     [SerializeField] private float maxSteerAngle = 30f;
+    [SerializeField] private Vector3 centerOfMass;
     private float _moveInput;
     private float _steerInput;
     void Start()
     {
-
+        var rb = GetComponent<Rigidbody>();
+        rb.centerOfMass = centerOfMass;
     }
 
     // Update is called once per frame
@@ -42,12 +44,6 @@ public class CarController : MonoBehaviour
         _moveInput = Input.GetAxis("Horizontal");
         WheelAnimation();
         BrakeControl();
-    }
-
-    private void LateUpdate()
-    {
-        Move();
-        Steer();
     }
     private void BrakeControl()
     {
@@ -66,36 +62,43 @@ public class CarController : MonoBehaviour
             }
         }
     }
-    private void Move()
-    {
-        foreach (var wheel in wheels) 
-        {
-        wheel.collider.motorTorque = _moveInput * speed;
-        }
-    }
-    private void Steer()
-    {
-        foreach (var wheel in wheels)
-        {
-            if (wheel.type == WheelType.Front)
-            {
-                float steerAngle = _steerInput * maxSteerAngle * steerSpeed;
-                wheel.collider.steerAngle = Mathf.Lerp(wheel.collider.steerAngle, steerAngle, 0.5f); 
-            }
-        }
-
-    }
-
     private void WheelAnimation()
     {
-        foreach (var wheel in wheels)   
+        foreach (var wheel in wheels)
         {
             Vector3 pos;
             Quaternion rot;
             wheel.collider.GetWorldPose(out pos, out rot);
             wheel.transform.position = pos;
             wheel.transform.rotation = rot;
-            //wheel.collider.motorTorque = _moveInput * speed;  
+
         }
-    }
-}
+
+        private void LateUpdate()
+        {
+            Move();
+            Steer();
+        }
+
+        private void Move()
+        {
+            foreach (var wheel in wheels)
+            {
+                wheel.collider.motorTorque = _moveInput * speed;
+            }
+        }
+        private void Steer()
+        {
+            foreach (var wheel in wheels)
+            {
+                if (wheel.type == WheelType.Front)
+                {
+                    float steerAngle = _steerInput * maxSteerAngle * steerSpeed;
+                    wheel.collider.steerAngle = Mathf.Lerp(wheel.collider.steerAngle, steerAngle, 0.5f);
+                }
+            }
+
+        }
+
+
+    } }
