@@ -1,40 +1,43 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using DefaultNamespace;
 using UnityEngine;
 
-public class OceanManager : MonoBehaviour
+public class OceanManager : SingleTon<OceanManager>
 {
-    // Start is called before the first frame update
+
     [SerializeField] private GameObject ocean;
     [SerializeField] private float wavePower = 2f;
 
-
-    // Update is called once per frame
     private Material _oceanMat;
-    {
+    private Texture2D _oceanTex;
 
+    private void Start()
+    {
+        SetValue();
     }
 
     private void SetValue()
     {
         _oceanMat = ocean.GetComponent<Renderer>().sharedMaterial;
-        _oceanMat = (Texture2D)_oceanMat.GetTexture("mainTex");
+        _oceanTex = (Texture2D)_oceanMat.GetTexture("_mainTex");
     }
-
 
     private void OnValidate()
     {
-        if (!Application.isPlaying) return;
-        if (ocean != null) 
+        //if (! Application.isPlaying) return;
+        if (ocean != null)
         {
             SetValue();
         }
-        _oceanMat.SetFloat("_wavePower",wavePower);
+        _oceanMat.SetFloat("_wavePower", wavePower);
     }
 
     public float GetWaveHeight(Vector3 point)
     {
-        float waveHeight = _oceanTex.GetPixelBilinear(point.x, point.z).g * wavePower;
+        float waveHeight = _oceanTex.GetPixelBilinear(
+            point.x, point.z * Time.deltaTime).g * wavePower * transform.localScale.x;
         return waveHeight;
     }
 }
