@@ -1,7 +1,7 @@
-﻿using Mirror;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -13,7 +13,7 @@ public class CarController : NetworkBehaviour
         Front,
         Rear
     }
-
+    
     [System.Serializable]
     public struct Wheel
     {
@@ -22,7 +22,7 @@ public class CarController : NetworkBehaviour
         public Transform transform;
         public ParticleSystem dust;
     }
-
+    
     [SerializeField]
     private List<Wheel> wheels = new List<Wheel>();
 
@@ -32,7 +32,7 @@ public class CarController : NetworkBehaviour
     [SerializeField] private Vector3 centerOfMass;
     private float _moveInput;
     private float _steerInput;
-
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -43,12 +43,19 @@ public class CarController : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!isLocalPlayer) return;
-
+        if (! isLocalPlayer) return;
+        
         _moveInput = Input.GetAxis("Vertical");
         _steerInput = Input.GetAxis("Horizontal");
         WheelAnimation();
         BrakeControl();
+    }
+    
+    private void LateUpdate()
+    {
+        if (! isLocalPlayer) return;
+        Move();
+        Steer();
     }
 
     private void PlayFx(bool isPlay)
@@ -96,12 +103,7 @@ public class CarController : NetworkBehaviour
         }
     }
 
-    private void LateUpdate()
-    {
-        if (!isLocalPlayer) return;
-        Move();
-        Steer();
-    }
+    
 
     private void Steer()
     {
@@ -110,7 +112,7 @@ public class CarController : NetworkBehaviour
             if (wheel.type == WheelType.Front)
             {
                 float steerAngle = _steerInput * maxSteerAngle * steerSpeed;
-                wheel.collider.steerAngle =
+                wheel.collider.steerAngle = 
                     Mathf.Lerp(wheel.collider.steerAngle, steerAngle, 0.5f);
             }
         }

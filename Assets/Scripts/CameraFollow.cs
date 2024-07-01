@@ -15,10 +15,10 @@ namespace DefaultNamespace
             Follow();
             Rotate();
         }
-
+        
         private void Rotate()
         {
-
+            
         }
 
         private void Follow()

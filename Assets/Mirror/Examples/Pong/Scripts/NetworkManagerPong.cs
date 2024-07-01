@@ -37,9 +37,11 @@ namespace Mirror.Examples.Pong
             // destroy ball
             if (ball != null)
                 NetworkServer.Destroy(ball);
-
+            
             // call base functionality (actually destroys the player)
             base.OnServerDisconnect(conn);
+            
         }
+
     }
 }

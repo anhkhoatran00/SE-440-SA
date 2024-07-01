@@ -1,22 +1,24 @@
-using Mirror;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using Mirror;
 using UnityEngine;
-using UnityEngine.Pool;
 
 [RequireComponent(typeof(Rigidbody))]
 public class Player : NetworkBehaviour
+{
     [SerializeField] private float _force = 10f;
     private Rigidbody _rb;
     // Start is called before the first frame update
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
-        var cinemachine = FindObjectOfType<CinemachineVirtualCamera>();
-        cinemachine.Follow = transform;
-        cinemachine.LookAt= transform;
+
+        if (!isLocalPlayer) return;
+        var cineMachine = FindObjectOfType<CinemachineVirtualCamera>();
+        cineMachine.Follow = transform;
+        cineMachine.LookAt = transform;
     }
 
     // Update is called once per frame

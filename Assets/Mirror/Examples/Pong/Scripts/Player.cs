@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Mirror.Examples.Pong
@@ -14,6 +15,8 @@ namespace Mirror.Examples.Pong
             // don't control other player's rackets
             if (isLocalPlayer)
                 rigidbody2d.velocity = new Vector2(0, Input.GetAxisRaw("Vertical")) * speed * Time.fixedDeltaTime;
+            
         }
+
     }
 }
